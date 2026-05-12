@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdPrism.Graphics</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
+body{background:linear-gradient(135deg,#0a0a14,#0f1020,#07070c);color:#fff;scroll-behavior:smooth;}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 22px;background:rgba(255,255,255,0.05);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.08);position:sticky;top:0;z-index:99;}
+.logo{color:#00f7ff;font-size:22px;font-weight:700;cursor:pointer;letter-spacing:1px;}
+nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+nav a{color:#ddd;text-decoration:none;font-size:14px;padding:6px 10px;border-radius:8px;transition:0.3s;}
+nav a:hover{background:rgba(0,247,255,0.15);color:#00f7ff;}
+.btn{background:linear-gradient(135deg,#00f7ff,#0088ff);border:none;padding:7px 12px;border-radius:10px;cursor:pointer;font-weight:600;color:#000;transition:0.3s;margin-top:5px;}
+.btn:hover{transform:scale(1.05);}
+section{padding:60px 20px;}
+h2{color:#00f7ff;margin-bottom:20px;font-size:26px;}
+#home{text-align:center;padding:90px 20px;}
+#home h1{font-size:42px;background:linear-gradient(90deg,#00f7ff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+#home p{color:#aaa;margin-top:10px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
+.card{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px);padding:15px;border-radius:16px;border:1px solid rgba(255,255,255,0.08);transition:0.3s;overflow:hidden;cursor:pointer;}
+.card:hover{transform:translateY(-5px);border-color:#00f7ff;}
+.card img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;margin-bottom:10px;transition:0.3s;}
+#candList .card img{width:100px;height:100px;margin:auto;display:block;object-fit:cover;border-radius:50%;border:2px solid #00f7ff;box-shadow:0 0 10px rgba(0,247,255,0.4);}
+.hidden{display:none;}
+input,textarea{width:100%;padding:10px;margin:6px 0;border-radius:10px;border:none;outline:none;background:#151525;color:#fff;}
+textarea{resize:none;height:80px;}
+#loginBox{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:none;justify-content:center;align-items:center;z-index:999;}
+.loginCard{background:#111;padding:25px;border-radius:14px;width:280px;border:1px solid rgba(255,255,255,0.1);}
+.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:#fff;padding:14px 16px;border-radius:50px;font-weight:600;box-shadow:0 0 20px rgba(37,211,102,0.5);cursor:pointer;}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;z-index:9999;}
+.modalBox{background:#111;padding:20px;border-radius:12px;max-width:300px;text-align:center;}
+.modalBox img{width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<header>
+<div class="logo" id="logo">AdPrism.Graphics</div>
+<nav>
+<a href="#home">Home</a>
+<a href="#about">About</a>
+<a href="#services">Services</a>
+<a href="#portfolio">Portfolio</a>
+<a href="#candidates">Candidates</a>
+<a href="#prompt">Prompts</a>
+<a href="#pricing">Pricing</a>
+<a href="#contact">Contact</a>
+<button class="btn" onclick="document.getElementById('loginBox').style.display='flex'">Admin Login</button>
+<button class="btn" id="logoutBtn" style="display:none">Logout</button>
+</nav>
+</header>
+<section id="home">
+<h1>Creative Digital Studio</h1>
+<p>Design • Branding • UI • Graphics</p>
+</section>
+<section id="about"><h2>About</h2><div class="card">Modern creative agency</div></section>
+<section id="services"><h2>Services</h2><div class="card">Design Services</div></section>
+<section id="portfolio"><h2>Portfolio</h2><div class="card">Work Showcase</div></section>
+<section id="candidates">
+<h2>Candidates</h2>
+<div id="candForm" class="hidden">
+<input id="cName" placeholder="Name">
+<input id="cRole" placeholder="Role">
+<input type="file" id="cImg">
+<button class="btn" onclick="addCand()">Add</button>
+</div>
+<div id="candList" class="grid"></div>
+</section>
+<section id="prompt">
+<h2>Prompts</h2>
+<div id="promptForm" class="hidden">
+<input id="pTitle" placeholder="Title">
+<input type="file" id="pImg">
+<button class="btn" onclick="addPrompt()">Add</button>
+</div>
+<div id="promptList" class="grid"></div>
+</section>
+<section id="pricing"><h2>Pricing</h2><div class="card">Basic ₹49 | Pro ₹199 | Premium ₹499</div></section>
+<section id="contact">
+<h2>Contact</h2>
+<div class="card">
+<input id="userName" placeholder="Your Name">
+<input id="userPhone" placeholder="Your Phone Number">
+<textarea id="userMsg" placeholder="Your Message"></textarea>
+<button class="btn" onclick="sendWhatsApp()">Send WhatsApp</button>
+</div>
+</section>
+<section id="messages" class="hidden">
+<h2>User Messages (Admin Only)</h2>
+<div id="msgList" class="grid"></div>
+</section>
+<div id="loginBox">
+<div class="loginCard">
+<input id="pass" placeholder="Password">
+<button class="btn" id="loginBtn">Login</button>
+</div>
+</div>
+<div id="modal" onclick="closeModal()">
+<div class="modalBox" id="modalBox"></div>
+</div>
+<div class="whatsapp" onclick="sendWhatsApp()">💬 WhatsApp</div>
+<script>
+let admin = localStorage.getItem("admin") === "1";
+const ADMIN_PASSWORD = "admin123";
+let candidates = JSON.parse(localStorage.getItem("candidates") || "[]");
+let prompts = JSON.parse(localStorage.getItem("prompts") || "[]");
+let messages = JSON.parse(localStorage.getItem("messages") || "[]");
+const loginBox = document.getElementById("loginBox");
+const loginBtn = document.getElementById("loginBtn");
+const pass = document.getElementById("pass");
+const logoutBtn = document.getElementById("logoutBtn");
+const candList = document.getElementById("candList");
+const promptList = document.getElementById("promptList");
+const msgList = document.getElementById("msgList");
+function openModal(html){document.getElementById("modalBox").innerHTML=html;document.getElementById("modal").style.display="flex";}
+function closeModal(){document.getElementById("modal").style.display="none";}
+function render(){candList.innerHTML=candidates.map((c,i)=>`<div class='card' data-type='cand' data-index='${i}'>${c.img?`<img src='${c.img}'>`:''}<h3>${c.name}</h3><p>${c.role}</p></div>`).join("");promptList.innerHTML=prompts.map((p,i)=>`<div class='card' data-type='prompt' data-index='${i}'>${p.img?`<img src='${p.img}'>`:''}<h3>${p.title}</h3></div>`).join("");msgList.innerHTML=messages.map(m=>`<div class='card'><h3>${m.name}</h3><p>${m.phone}</p><p>${m.msg}</p></div>`).join("");attach();}
+function attach(){document.querySelectorAll('[data-type="cand"]').forEach(el=>el.onclick=()=>{let i=el.dataset.index;let c=candidates[i];openModal(`<img src='${c.img||""}'><h3>${c.name}</h3><p>${c.role}</p>`);});document.querySelectorAll('[data-type="prompt"]').forEach(el=>el.onclick=()=>{let i=el.dataset.index;let p=prompts[i];openModal(`<h3>${p.title}</h3>`);});}
+function sync(){if(admin){document.getElementById("candForm").classList.remove("hidden");document.getElementById("promptForm").classList.remove("hidden");document.getElementById("messages").classList.remove("hidden");logoutBtn.style.display="inline-block";}else{document.getElementById("candForm").classList.add("hidden");document.getElementById("promptForm").classList.add("hidden");document.getElementById("messages").classList.add("hidden");logoutBtn.style.display="none";}render();}
+loginBtn.onclick=()=>{if(pass.value===ADMIN_PASSWORD){admin=true;localStorage.setItem("admin","1");loginBox.style.display="none";sync();}else alert("Wrong Password");};
+logoutBtn.onclick=()=>{admin=false;localStorage.removeItem("admin");sync();};
+function sendWhatsApp(){let name=userName.value;let phone=userPhone.value;let msg=userMsg.value;messages.push({name,phone,msg});localStorage.setItem("messages",JSON.stringify(messages));let url="https://api.whatsapp.com/send?phone=919999999999&text="+encodeURIComponent(msg);window.open(url,"_blank");}
+sync();
+</script>
+</body>
+</html>
